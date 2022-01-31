@@ -21,7 +21,7 @@ public class ShoppingController {
 
     @PostMapping
     public String getPrice(@RequestBody
-                               ShoppingCart b) {
-        return shoppingService.getPrice(b);
+                               ShoppingCart shoppingCart) {
+        return shoppingService.getPrice(shoppingCart);
     }
 }

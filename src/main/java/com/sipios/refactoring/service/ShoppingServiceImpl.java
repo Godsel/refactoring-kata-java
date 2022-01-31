@@ -63,9 +63,6 @@ public class ShoppingServiceImpl implements ShoppingService {
                     } else if (it.getType().equals("JACKET")) {
                         price += 100 * it.getNb() * discountRate;
                     }
-                    // else if (it.getType().equals("SWEATSHIRT")) {
-                    //     price += 80 * it.getNb();
-                    // }
                 }
             } else {
                 if (shoppingCart.getItems() == null) {
@@ -82,9 +79,6 @@ public class ShoppingServiceImpl implements ShoppingService {
                     } else if (it.getType().equals("JACKET")) {
                         price += 100 * it.getNb() * 0.9 * discountRate;
                     }
-                    // else if (it.getType().equals("SWEATSHIRT")) {
-                    //     price += 80 * it.getNb();
-                    // }
                 }
             }
 
@@ -106,8 +100,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                         throw new Exception("Price (" + price + ") is too high for standard customer");
                     }
                 }
-            } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            } catch (Exception exception) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
             }
 
             return String.valueOf(price);
