@@ -3,11 +3,11 @@ package com.sipios.refactoring.model;
 public class ShoppingCart {
 
     private ShoppingItem[] shoppingItems;
-    private String         userType;
+    private String         customerType;
 
-    public ShoppingCart(ShoppingItem[] is, String t) {
-        this.shoppingItems = is;
-        this.userType      = t;
+    public ShoppingCart(ShoppingItem[] shoppingItemsArray, String customerType) {
+        this.shoppingItems = shoppingItemsArray;
+        this.customerType  = customerType;
     }
 
     public ShoppingCart() {
@@ -21,11 +21,11 @@ public class ShoppingCart {
         this.shoppingItems = shoppingItems;
     }
 
-    public String getUserType() {
-        return userType;
+    public String getCustomerType() {
+        return customerType;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 }

@@ -20,57 +20,36 @@ public class ShoppingServiceImpl implements ShoppingService {
             double discountRate;
 
             Date     date = new Date();
-            Calendar
-                calendar  = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+            Calendar calendar  = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
             calendar.setTime(date);
 
             // Compute discount for customer
-            if (shoppingCart.getUserType().equals("STANDARD_CUSTOMER")) {
-                discountRate = 1;
-            } else if (shoppingCart.getUserType().equals("PREMIUM_CUSTOMER")) {
-                discountRate = 0.9;
-            } else if (shoppingCart.getUserType().equals("PLATINUM_CUSTOMER")) {
-                discountRate = 0.5;
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            discountRate = getDiscountRate(shoppingCart);
+
+            if (isShoppingCartEmpty(shoppingCart)) {
+                return "0";
             }
 
             // Compute total amount depending on the types and quantity of product and
             // if we are in winter or summer discounts periods
             if (
-                !(
-                    calendar.get(Calendar.DAY_OF_MONTH) < 15 &&
-                    calendar.get(Calendar.DAY_OF_MONTH) > 5 &&
-                    calendar.get(Calendar.MONTH) == 5
-                ) &&
-                !(
-                    calendar.get(Calendar.DAY_OF_MONTH) < 15 &&
-                    calendar.get(Calendar.DAY_OF_MONTH) > 5 &&
-                    calendar.get(Calendar.MONTH) == 0
-                )
+                !isWinterDiscountPeriod(calendar) &&
+                !isSummerDiscountPeriod(calendar)
             ) {
-                if (shoppingCart.getItems() == null) {
-                    return "0";
-                }
+                for (int index = 0; index < shoppingCart.getItems().length; index++) {
+                    ShoppingItem shoppingItem = shoppingCart.getItems()[index];
 
-                for (int i = 0; i < shoppingCart.getItems().length; i++) {
-                    ShoppingItem it = shoppingCart.getItems()[i];
-
-                    if (it.getType().equals("TSHIRT")) {
-                        price += 30 * it.getNb() * discountRate;
-                    } else if (it.getType().equals("DRESS")) {
-                        price += 50 * it.getNb() * discountRate;
-                    } else if (it.getType().equals("JACKET")) {
-                        price += 100 * it.getNb() * discountRate;
+                    if (shoppingItem.getType().equals("TSHIRT")) {
+                        price += 30 * shoppingItem.getNb() * discountRate;
+                    } else if (shoppingItem.getType().equals("DRESS")) {
+                        price += 50 * shoppingItem.getNb() * discountRate;
+                    } else if (shoppingItem.getType().equals("JACKET")) {
+                        price += 100 * shoppingItem.getNb() * discountRate;
                     }
                 }
             } else {
-                if (shoppingCart.getItems() == null) {
-                    return "0";
-                }
-
-                for (int i = 0; i < shoppingCart.getItems().length; i++) {
-                    ShoppingItem it = shoppingCart.getItems()[i];
+                for (int index = 0; index < shoppingCart.getItems().length; index++) {
+                    ShoppingItem it = shoppingCart.getItems()[index];
 
                     if (it.getType().equals("TSHIRT")) {
                         price += 30 * it.getNb() * discountRate;
@@ -83,15 +62,15 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             try {
-                if (shoppingCart.getUserType().equals("STANDARD_CUSTOMER")) {
+                if (shoppingCart.getCustomerType().equals("STANDARD_CUSTOMER")) {
                     if (price > 200) {
                         throw new Exception("Price (" + price + ") is too high for standard customer");
                     }
-                } else if (shoppingCart.getUserType().equals("PREMIUM_CUSTOMER")) {
+                } else if (shoppingCart.getCustomerType().equals("PREMIUM_CUSTOMER")) {
                     if (price > 800) {
                         throw new Exception("Price (" + price + ") is too high for premium customer");
                     }
-                } else if (shoppingCart.getUserType().equals("PLATINUM_CUSTOMER")) {
+                } else if (shoppingCart.getCustomerType().equals("PLATINUM_CUSTOMER")) {
                     if (price > 2000) {
                         throw new Exception("Price (" + price + ") is too high for platinum customer");
                     }
@@ -106,5 +85,35 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             return String.valueOf(price);
         }
+    }
+
+    private boolean isShoppingCartEmpty(ShoppingCart shoppingCart) {
+        return shoppingCart.getItems() == null;
+    }
+
+    private double getDiscountRate(ShoppingCart shoppingCart) {
+        double discountRate;
+        if (shoppingCart.getCustomerType().equals("STANDARD_CUSTOMER")) {
+            discountRate = 1;
+        } else if (shoppingCart.getCustomerType().equals("PREMIUM_CUSTOMER")) {
+            discountRate = 0.9;
+        } else if (shoppingCart.getCustomerType().equals("PLATINUM_CUSTOMER")) {
+            discountRate = 0.5;
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        return discountRate;
+    }
+
+    private boolean isSummerDiscountPeriod(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) < 15 &&
+        calendar.get(Calendar.DAY_OF_MONTH) > 5 &&
+        calendar.get(Calendar.MONTH) == Calendar.JANUARY;
+    }
+
+    private boolean isWinterDiscountPeriod(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) < 15 &&
+        calendar.get(Calendar.DAY_OF_MONTH) > 5 &&
+        calendar.get(Calendar.MONTH) == Calendar.JUNE;
     }
 }
