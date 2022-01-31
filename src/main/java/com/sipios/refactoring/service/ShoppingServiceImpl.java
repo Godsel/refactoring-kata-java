@@ -1,5 +1,7 @@
 package com.sipios.refactoring.service;
 
+import com.sipios.refactoring.exception.PriceException;
+import com.sipios.refactoring.exception.UnexpectedBodyException;
 import com.sipios.refactoring.model.ShoppingCart;
 import com.sipios.refactoring.model.ShoppingItem;
 import org.springframework.http.HttpStatus;
@@ -64,19 +66,19 @@ public class ShoppingServiceImpl implements ShoppingService {
             try {
                 if (shoppingCart.getCustomerType().equals("STANDARD_CUSTOMER")) {
                     if (price > 200) {
-                        throw new Exception("Price (" + price + ") is too high for standard customer");
+                        throw new PriceException("Price (" + price + ") is too high for standard customer");
                     }
                 } else if (shoppingCart.getCustomerType().equals("PREMIUM_CUSTOMER")) {
                     if (price > 800) {
-                        throw new Exception("Price (" + price + ") is too high for premium customer");
+                        throw new PriceException("Price (" + price + ") is too high for premium customer");
                     }
                 } else if (shoppingCart.getCustomerType().equals("PLATINUM_CUSTOMER")) {
                     if (price > 2000) {
-                        throw new Exception("Price (" + price + ") is too high for platinum customer");
+                        throw new PriceException("Price (" + price + ") is too high for platinum customer");
                     }
                 } else {
                     if (price > 200) {
-                        throw new Exception("Price (" + price + ") is too high for standard customer");
+                        throw new PriceException("Price (" + price + ") is too high for standard customer");
                     }
                 }
             } catch (Exception exception) {
@@ -100,7 +102,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         } else if (shoppingCart.getCustomerType().equals("PLATINUM_CUSTOMER")) {
             discountRate = 0.5;
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new UnexpectedBodyException(HttpStatus.BAD_REQUEST);
         }
         return discountRate;
     }
