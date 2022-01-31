@@ -5,14 +5,12 @@ import com.sipios.refactoring.UnitTest;
 import com.sipios.refactoring.model.Body;
 import com.sipios.refactoring.model.Item;
 import com.sipios.refactoring.service.ShoppingService;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 @IntegrationTest
 class ShoppingControllerIntegrationTest {
@@ -30,18 +28,30 @@ class ShoppingControllerIntegrationTest {
 
     @Test
     void should_not_throw() {
-        String endPointUrl =
-            "http://localhost:" + localServerPort + "/shopping";
-        HttpEntity<String> stringHttpEntity = new HttpEntity<>(null,
-                                                               null);
-        ResponseEntity<String> stringResponseEntity = restTemplate.exchange(endPointUrl,
-                                                                            HttpMethod.POST,
-                                                                            stringHttpEntity,
-                                                                            String.class);
-        Assertions.assertDoesNotThrow(
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(
             () -> shoppingService.getPrice(new Body(new Item[]{},
                                                     "STANDARD_CUSTOMER"))
 
-                                     );
+                                                           );
+    }
+
+    @Test
+    void should_return_HttpOK_when_requesting_shopping_endpoint() {
+        // Given
+        Body body = new Body(new Item[]{}, "STANDARD_CUSTOMER");
+        String endPointUrl =
+            "http://localhost:" + localServerPort + "/shopping";
+        HttpEntity<Body> bodyHttpEntity = new HttpEntity<>(body,
+                                                           new HttpHeaders());
+        // when
+        ResponseEntity<String> stringResponseEntity = restTemplate.exchange(
+            endPointUrl,
+            HttpMethod.POST,
+            bodyHttpEntity,
+            String.class);
+
+        org.assertj.core.api.Assertions.assertThat(stringResponseEntity.getStatusCode())
+                                       .isEqualTo(
+                                           HttpStatus.OK);
     }
 }
