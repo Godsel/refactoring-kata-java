@@ -1,0 +1,5 @@
+1 - Move classes in specific files
+2 - extract business code into service (update tests) and remove useless code in controller
+3 - better naming on existant
+4 - add more functionnal tests before breaking changes
+5 - refactoring get price ; reduce its length, complexity ..
