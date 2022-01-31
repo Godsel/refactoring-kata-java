@@ -1,0 +1,15 @@
+What I wanted to do but time is out :
+
+- add pattern strategy with enum, to simplify business logic for shopping item
+- add more tests based on business logic
+
+What would be better from my point of view (with more time ?):
+
+- shopping item as object, to add extension (maybe to add "SWEATSHIRT" later)
+- same for customer, if we want to add some later
+==> then for each customer, we have a discount, and a max price , and could be even variabilized (ready to get data from database for example, here everything is hard-coded)
++ same goes for shopping item price.
+
+
+
+=> a bit frustrated by the outcome
