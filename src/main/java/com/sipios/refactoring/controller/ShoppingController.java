@@ -1,9 +1,7 @@
 package com.sipios.refactoring.controller;
 
-import com.sipios.refactoring.model.Body;
+import com.sipios.refactoring.model.ShoppingCart;
 import com.sipios.refactoring.service.ShoppingService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +21,7 @@ public class ShoppingController {
 
     @PostMapping
     public String getPrice(@RequestBody
-                               Body b) {
+                               ShoppingCart b) {
         return shoppingService.getPrice(b);
     }
 }

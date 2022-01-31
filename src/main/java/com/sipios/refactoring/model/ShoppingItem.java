@@ -1,14 +1,14 @@
 package com.sipios.refactoring.model;
 
-public class Item {
+public class ShoppingItem {
 
     private String type;
     private int    nb;
 
-    public Item() {
+    public ShoppingItem() {
     }
 
-    public Item(String type, int quantity) {
+    public ShoppingItem(String type, int quantity) {
         this.type = type;
         this.nb   = quantity;
     }

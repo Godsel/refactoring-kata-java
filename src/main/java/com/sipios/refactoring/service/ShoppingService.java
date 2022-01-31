@@ -1,7 +1,7 @@
 package com.sipios.refactoring.service;
 
-import com.sipios.refactoring.model.Body;
+import com.sipios.refactoring.model.ShoppingCart;
 
 public interface ShoppingService {
-    String getPrice(Body b);
+    String getPrice(ShoppingCart b);
 }
